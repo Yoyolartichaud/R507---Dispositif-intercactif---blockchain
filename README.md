@@ -15,7 +15,7 @@ traduit des notions abstraites en objets 3D que l'on peut manipuler.
 | Membre | Compte GitHub | Rôle principal |
 |---|---|---|
 | Floryen Duflot | _à compléter_ | _à définir_ |
-| _à compléter_ | | |
+| _à compléter_ | [@Yoyolartichaud](https://github.com/Yoyolartichaud) | _à définir_ |
 | _à compléter_ | | |
 
 ## L'idée en une phrase
