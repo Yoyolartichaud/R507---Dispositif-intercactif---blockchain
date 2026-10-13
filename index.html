@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le voyage de la bière</title>
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<aside id="panel">
+  <header>
+    <h1>Le voyage de la bière</h1>
+    <p>Du champ au verre : chaque étape écrit une page dans la blockchain.</p>
+  </header>
+
+  <ol id="stepper" aria-label="Étapes du voyage"></ol>
+
+  <section id="explain" class="box" aria-live="polite">
+    <p class="kicker">Ce qui se passe</p>
+    <h2 id="ex-title"></h2>
+    <div id="ex-text"></div>
+    <p id="ex-live" class="mono"></p>
+    <div class="row">
+      <button id="next" class="primary" type="button"></button>
+      <button id="undo" type="button" hidden>Annuler ma modification</button>
+      <button id="close" class="primary" type="button" hidden>Refermer le bloc</button>
+    </div>
+  </section>
+
+  <section id="hash-lab" class="box" hidden>
+    <h2>La machine à empreintes</h2>
+    <label for="lab-text">Écris ou modifie un texte</label>
+    <input id="lab-text" type="text" value="Label bio vérifié" maxlength="60" autocomplete="off">
+    <p class="hint">Son empreinte, recalculée à chaque frappe :</p>
+    <code id="lab-hash" class="hashgrid"></code>
+    <p id="lab-note" class="hint" aria-live="polite"></p>
+  </section>
+
+  <section id="focus" class="box" hidden>
+    <h2>Essayer de tricher</h2>
+    <p class="hint">Change un chiffre dans les données de ce bloc, et regarde ce qui arrive à son empreinte dans la vue éclatée.</p>
+    <label for="focus-edit">Données du <strong id="focus-name"></strong></label>
+    <textarea id="focus-edit" rows="3" maxlength="120"></textarea>
+  </section>
+
+  <section id="wallet" class="box" hidden>
+    <h2>Le portefeuille de Léa</h2>
+    <dl class="wallet">
+      <dt>🔑 Clé privée</dt><dd>•••• •••• •••• •••• <small>secrète : elle ne quitte jamais le téléphone</small></dd>
+      <dt>🔓 Clé publique</dt><dd id="w-public" class="mono"></dd>
+      <dt>📮 Adresse</dt><dd id="w-address" class="mono"></dd>
+      <dt>💰 Solde</dt><dd id="w-balance"></dd>
+    </dl>
+  </section>
+
+  <section id="tamper-tx" class="box" hidden>
+    <h2>Essayer de tricher</h2>
+    <p class="hint">La transaction est signée. Change le montant, comme le ferait un pirate, et regarde la signature sur la carte.</p>
+    <label for="tx-amount">Montant envoyé au bar (en satoshis)</label>
+    <input id="tx-amount" type="number" min="0" step="100">
+  </section>
+
+  <section class="box">
+    <h2>Ce que dit la blockchain de traçabilité</h2>
+    <ol id="history"></ol>
+    <p class="hint" id="history-hint">Vide pour l'instant : aucune étape n'a encore écrit de bloc.</p>
+  </section>
+
+  <details class="box">
+    <summary>Lexique : les mots à connaître</summary>
+    <dl>
+      <dt>Blockchain</dt><dd>Un registre partagé : chaque participant en garde une copie complète.</dd>
+      <dt>Bloc</dt><dd>Une page de ce registre. Elle regroupe plusieurs enregistrements ou transactions.</dd>
+      <dt>Empreinte (hash)</dt><dd>Un code calculé à partir d'un contenu. Si une seule lettre change, le code change entièrement.</dd>
+      <dt>Nonce</dt><dd>Un nombre que l'on fait varier jusqu'à obtenir une empreinte qui commence par « 00 ».</dd>
+      <dt>Minage, mineur</dt><dd>Le minage est la recherche de ce nonce. Un mineur est une personne ou une entreprise qui fait ce calcul avec des ordinateurs puissants : le premier qui trouve écrit le bloc et reçoit une récompense.</dd>
+      <dt>Preuve de travail</dt><dd>Le nonce trouvé prouve que le mineur a beaucoup calculé. En anglais : <i>proof of work</i>.</dd>
+      <dt>Nœud</dt><dd>Un ordinateur du réseau. La blockchain est rangée là : chaque nœud en garde une copie complète sur son disque et vérifie tout ce qu'il reçoit.</dd>
+      <dt>Explorateur de blocs</dt><dd>Un site ou une application qui affiche une blockchain sous forme de tableau lisible.</dd>
+      <dt>Décentralisé</dt><dd>Sans chef ni serveur central : les nœuds se mettent d'accord entre eux.</dd>
+      <dt>Bitcoin, satoshi</dt><dd>Une monnaie numérique sans banque. Le satoshi est sa plus petite unité : 100 millions de satoshis font 1 bitcoin.</dd>
+      <dt>Portefeuille (wallet)</dt><dd>L'application qui garde les clés. Il ne contient pas de pièces.</dd>
+      <dt>Clé privée</dt><dd>Le secret qui permet de dépenser ses bitcoins. On ne la donne jamais.</dd>
+      <dt>Clé publique, adresse</dt><dd>Calculées à partir de la clé privée, on peut les donner à tout le monde pour être payé. Ici, le format de l'adresse est simplifié.</dd>
+      <dt>Transaction</dt><dd>Un ordre de paiement : telle adresse envoie tel montant à telle autre.</dd>
+      <dt>Signature</dt><dd>La preuve, calculée avec la clé privée, que la transaction vient bien de son propriétaire.</dd>
+      <dt>Mempool</dt><dd>La salle d'attente des transactions vérifiées, avant leur entrée dans un bloc.</dd>
+      <dt>Frais</dt><dd>Un petit montant offert au mineur pour qu'il inscrive la transaction.</dd>
+      <dt>Confirmation</dt><dd>Chaque bloc ajouté après celui de la transaction. Plus il y en a, plus le paiement est définitif.</dd>
+      <dt>Immutabilité</dt><dd>Une fois validée, une information est très difficile à modifier sans que tout le monde le voie.</dd>
+    </dl>
+  </details>
+
+  <p class="legal">L'abus d'alcool est dangereux pour la santé, à consommer avec modération.</p>
+</aside>
+
+<main id="stage">
+  <ul id="legend">
+    <li><strong>En haut</strong> le contenu des blockchains, vu en grand</li>
+    <li><strong>Devant</strong> les ordinateurs qui en gardent une copie</li>
+    <li><strong>En bas</strong> le voyage de la bière</li>
+    <li><strong>Astuce</strong> clique sur un bloc pour l'ouvrir</li>
+  </ul>
+  <div id="clock" aria-label="Date dans l'histoire"></div>
+  <div id="callouts" hidden><svg id="leaders" aria-hidden="true"></svg></div>
+  <div id="viewtools">
+    <button id="view-table" type="button">Lire la blockchain</button>
+    <button id="view-all" type="button">Vue d'ensemble</button>
+    <button id="view-reset" type="button">Recentrer</button>
+  </div>
+</main>
+
+<dialog id="explorer" aria-labelledby="explorer-title">
+  <header>
+    <h2 id="explorer-title">Explorateur de blocs</h2>
+    <button id="explorer-close" type="button">Fermer</button>
+  </header>
+  <p>Voici la forme réelle d'une blockchain : <strong>une longue liste de blocs, enregistrée dans un fichier sur chaque ordinateur du réseau</strong>. Pour la lire, on utilise un site ou une application appelé explorateur de blocs, qui l'affiche en tableau, un bloc par ligne.</p>
+  <p class="hint">Même couleur = même empreinte. Regarde : l'« empreinte du parent » de chaque ligne est l'« empreinte du bloc » de la ligne du dessus. C'est ça, la chaîne.</p>
+  <div id="explorer-body"></div>
+</dialog>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
