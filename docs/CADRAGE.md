@@ -33,38 +33,50 @@ Conséquences pour la conception :
 
 ## 3. Fil rouge narratif
 
-**Le voyage d'une transaction.** Alice veut envoyer 5 jetons à Bob, sans banque
-pour garantir le paiement. Comment tout le monde peut-il être sûr que ce paiement
-est vrai, et qu'il ne sera jamais modifié ?
+**Le voyage de la bière, du champ au verre.** On suit une bière de la moisson de
+l'orge jusqu'au verre de la cliente. L'histoire se déroule en deux temps.
 
-On suit cette transaction du début à la fin. La même transaction réapparaît à
-chaque étape, ce qui donne un repère constant à l'utilisateur et relie les sept
-notions entre elles.
+1. **La traçabilité.** À chaque étape (ferme, brasserie, transport, bar), des
+   informations sont écrites dans une blockchain que les quatre acteurs
+   possèdent chacun en copie. Pendant le transport, une panne de climatisation
+   est enregistrée automatiquement : le transporteur aimerait l'effacer, et
+   l'utilisateur peut essayer à sa place.
+2. **Le paiement.** La cliente, Léa, paie sa bière en bitcoin. On découvre son
+   portefeuille et ses clés, la signature de la transaction, sa diffusion sur le
+   réseau, la course des mineurs et les confirmations.
+
+Ce fil rouge a été choisi parce qu'il est concret : la traçabilité d'un aliment
+est un usage réel des blockchains, et la panne du camion donne une raison
+évidente de vouloir tricher. Le paiement en bitcoin permet ensuite d'introduire
+le vocabulaire le plus courant. Deux pistes antérieures ont été écartées : un
+simple paiement entre deux personnes (trop abstrait) et le voyage d'un saumon
+(même idée, remplacée par la bière).
 
 ## 4. Parcours
 
-Une étape par notion obligatoire, dans l'ordre du sujet. Chaque étape contient au
-moins une interaction dont l'effet se voit dans la scène 3D.
+Le parcours suit l'histoire, et non l'ordre des notions du sujet. Chaque notion y
+est traitée par au moins une interaction dont l'effet se voit dans la scène 3D.
 
-| Étape | Notion obligatoire | Dans le récit | Interaction prévue |
-|---|---|---|---|
-| 1 | Structure d'un bloc | Le paiement d'Alice est rangé dans un bloc | Cliquer sur le bloc pour l'ouvrir et explorer ses parties : données, hash du bloc, hash du bloc parent, nonce |
-| 2 | Chaînage cryptographique | Le bloc est accroché aux précédents | Modifier un caractère des données : le hash change entièrement et le lien avec le bloc suivant se rompt |
-| 3 | Immutabilité et détection de falsification | Quelqu'un tente de changer « 5 » en « 500 » | Falsifier un bloc sur un nœud, puis lancer la vérification : les autres nœuds détectent l'incohérence et rejettent la copie |
-| 4 | Réseau et décentralisation | La transaction circule de nœud en nœud | Faire partir la transaction, éteindre des nœuds et constater qu'elle passe quand même ; comparer avec un système centralisé |
-| 5 | Validation et minage | La transaction est vérifiée puis minée | Vérifier des transactions (dont des invalides), puis miner : recherche d'un nonce selon une difficulté réglable |
-| 6 | Comparaison d'au moins deux mécanismes de consensus | Qui a le droit d'ajouter le bloc ? | Lancer des tours en PoW et en PoS côte à côte, faire varier sa puissance de calcul ou sa mise, comparer les résultats |
-| 7 | Cycle de vie d'une transaction et scénario d'attaque illustré | Le trajet complet, puis : et si Alice trichait ? | Dérouler création, propagation, validation, inclusion, confirmation ; puis tenter une double dépense et voir pourquoi elle échoue |
+| Notion obligatoire | Dans le récit | Interaction |
+|---|---|---|
+| 1. Structure d'un bloc | Chaque étape du voyage écrit un bloc | Cliquer sur un bloc pour l'ouvrir en vue éclatée : données, empreinte du parent, nonce, empreinte du bloc |
+| 2. Chaînage cryptographique | Le bloc de la brasserie s'accroche à celui de la ferme | Taper un texte dans la machine à empreintes et voir le code changer ; voir chaque bloc recopier l'empreinte du précédent |
+| 3. Immutabilité et détection de falsification | Le transporteur veut effacer la panne de climatisation | Modifier les données d'un bloc, puis faire vérifier : les autres ordinateurs détectent l'écart et refusent la copie |
+| 4. Réseau et décentralisation | Ferme, brasserie, transporteur et bar ont chacun un ordinateur | Voir les ordinateurs reliés et leurs copies se mettre à jour ; voir la transaction diffusée à tous les nœuds |
+| 5. Validation et minage | Le paiement de Léa doit être inscrit | Voir les nœuds vérifier la signature, puis les mineurs faire la course pour trouver le nonce |
+| 6. Comparaison d'au moins deux mécanismes de consensus | Une blockchain privée entre entreprises, une blockchain publique | **À concevoir** : comparer la preuve de travail de Bitcoin à un mécanisme adapté à quelques acteurs connus |
+| 7. Cycle de vie d'une transaction et scénario d'attaque illustré | Léa paie sa bière en bitcoin | Dérouler création, signature, diffusion, vérification, mempool, inclusion, confirmations ; jouer le pirate en changeant le montant après signature |
 
-Ces interactions sont des intentions de départ. Elles seront précisées,
-justifiées et éventuellement modifiées dans le livrable de choix de modélisation.
+Les choix de représentation seront justifiés un par un dans le livrable de choix
+de modélisation.
 
 ## 5. Choix techniques
 
 | Élément | Choix | Raison |
 |---|---|---|
 | Rendu 3D | Three.js | Imposé par le sujet |
-| Outil de développement | Vite | Serveur local rapide, build statique simple à déployer |
+| Outil de développement | Aucune étape de construction : modules JavaScript natifs, Three.js chargé depuis un CDN | Code lisible tel quel, déployable sans transformation |
+| Style visuel | « Maquette » : fond clair, blocs pastel arrondis, ombres douces | Rassurant et lisible pour un non-initié ; choisi parmi trois directions comparées en 3D |
 | Hébergement | GitHub Pages | Recommandé par le sujet, gratuit, lié au dépôt |
 | Gestion de projet | GitHub Projects, issues, milestones | Imposé par le sujet |
 
@@ -75,6 +87,7 @@ Contraintes mesurables reprises du sujet :
 - **Déploiement en ligne** : obligatoire.
 - **Tests utilisateurs** : au moins 2 personnes extérieures au groupe ; leurs
   observations sont consignées et donnent lieu, si nécessaire, à des issues.
+  Les comptes rendus sont dans [tests-utilisateurs/](tests-utilisateurs/README.md).
 
 ## 6. Livrables
 
