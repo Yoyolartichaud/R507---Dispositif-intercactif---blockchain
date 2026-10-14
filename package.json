@@ -1,0 +1,10 @@
+{
+  "name": "le-voyage-de-la-biere",
+  "version": "0.1.0",
+  "private": true,
+  "description": "La blockchain expliquée en 3D, du champ au verre (projet R507, BUT MMI).",
+  "scripts": {
+    "start": "node serveur.mjs",
+    "dev": "node serveur.mjs"
+  }
+}

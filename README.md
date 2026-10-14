@@ -32,11 +32,13 @@ Le public visé, le fil rouge et le parcours sont détaillés dans
 ## Lancer le projet
 
 Il faut Node.js et une connexion Internet (Three.js est chargé depuis un CDN).
-Il n'y a rien à installer.
+Il n'y a rien à installer : pas besoin de `npm install`.
 
 ```bash
-node serveur.mjs
+npm start
 ```
+
+(`npm run dev` et `node serveur.mjs` font exactement la même chose.)
 
 Puis ouvrir `http://localhost:5183` dans un navigateur récent.
 
