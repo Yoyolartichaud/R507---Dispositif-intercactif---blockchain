@@ -7,23 +7,28 @@ fonctionnement d'une blockchain à une personne qui n'en a jamais entendu parler
 Ce n'est pas une vraie blockchain : c'est un outil de médiation scientifique, qui
 traduit des notions abstraites en objets 3D que l'on peut manipuler.
 
-> **État du projet : prototype jouable de bout en bout** (18 étapes). Reste à
-> faire : la comparaison de deux mécanismes de consensus, un second test
-> utilisateur, la mesure des performances et le déploiement en ligne.
+**Démo en ligne : https://yoyolartichaud.github.io/R507---Dispositif-intercactif---blockchain/**
+
+> **État du projet : version rendue et soutenue le 19 novembre 2026.** Le parcours
+> complet compte 18 étapes, du champ au paiement. Les corrections demandées après
+> la soutenance sont faites sur la branche `post-soutenance` (voir plus bas).
 
 ## Équipe
 
 | Membre | Compte GitHub | Rôle principal |
 |---|---|---|
-| Floryen Duflot | @Flow7L (https://github.com/Flow7L) | _à définir_ |
-| Yoan Malaure | [@Yoyolartichaud](https://github.com/Yoyolartichaud) | _à définir_ |
-| _à compléter_ | | |
+| Floryen Duflot | [@Flow7L](https://github.com/Flow7L) | Binôme : histoire, style, application, tests ; commits depuis son compte |
+| Yoan Malaure | [@Yoyolartichaud](https://github.com/Yoyolartichaud) | Binôme : histoire, style, application, tests ; propriétaire du dépôt, mise en ligne sur GitHub Pages |
+
+Nous avons travaillé en binôme, sur le même poste : choix, demandes à l'IA,
+vérification et tests faits à deux. C'est pourquoi les commits viennent
+presque tous du compte de Floryen.
 
 ## L'idée en une phrase
 
 On suit une bière, de la moisson de l'orge jusqu'au verre. À chaque étape (ferme,
 brasserie, transport, bar), des informations sont écrites dans une blockchain de
-traçabilité. Puis la cliente, Léa, paie sa bière en bitcoin : on découvre ses
+traçabilité. Puis la cliente, Léa, paie sa bière en satoshis, la monnaie du réseau Bitcoin : on découvre ses
 clés, sa signature, les mineurs et les confirmations.
 
 Le public visé, le fil rouge et le parcours sont détaillés dans
@@ -62,6 +67,8 @@ passe » explique chaque étape en quelques phrases.
 À tout moment :
 
 - **cliquer sur un bloc** l'ouvre en vue éclatée, avec ses quatre parties expliquées ;
+- **cliquer sur un ordinateur** (un nœud ou un mineur) affiche sa fiche : son rôle,
+  sa copie de la blockchain bloc par bloc, et s'il est d'accord avec les autres ;
 - le bouton **« Lire la blockchain »** affiche les chaînes sous forme de tableau,
   comme le fait un explorateur de blocs.
 
@@ -74,7 +81,7 @@ passe » explique chaque étape en quelques phrases.
 | 3. Immutabilité et détection de falsification | Modifier les données d'un bloc : l'empreinte change, le lien se rompt, les autres ordinateurs refusent, la copie est réparée | Fait |
 | 4. Réseau et décentralisation | Des ordinateurs reliés, une copie chacun ; blocs et transactions diffusés à tous, sans centre | Fait, sans démonstration de panne d'un nœud |
 | 5. Validation et minage | Les nœuds vérifient la signature ; les mineurs font la course pour trouver le nonce | Fait, difficulté non réglable |
-| 6. Comparaison d'au moins deux mécanismes de consensus | — | **À faire** |
+| 6. Comparaison d'au moins deux mécanismes de consensus | Pas d'interaction dans l'application. Comparaison preuve de travail, preuve d'enjeu et preuve d'autorité présentée à l'oral et rédigée dans le document de choix de modélisation (section 4.6) | **Non représentée dans l'application** |
 | 7. Cycle de vie d'une transaction et scénario d'attaque illustré | Création, signature, diffusion, vérification, mempool, inclusion dans un bloc, confirmations ; attaques : montant modifié après signature, bloc altéré | Fait, double dépense non illustrée |
 
 Les sept notions, dans leur formulation complète, figurent dans le sujet et dans
@@ -108,18 +115,19 @@ Les sept notions, dans leur formulation complète, figurent dans le sujet et dan
 ## Tests utilisateurs
 
 Les comptes rendus sont dans [docs/tests-utilisateurs/](docs/tests-utilisateurs/README.md).
-Un premier test a été mené avec une étudiante de MMI 2e année : ses quatre
-remarques ont donné lieu à quatre corrections, qui restent à revalider.
+Un test a été mené avec une étudiante de MMI 2e année : ses quatre remarques ont
+donné lieu à quatre corrections. Le sujet en demande deux : le second test n'a
+pas été fait.
 
 ## Documentation
 
 | Fichier | Rôle | État |
 |---|---|---|
-| [docs/CADRAGE.md](docs/CADRAGE.md) | Document de cadrage : public, fil rouge, parcours, organisation | À valider par le groupe |
+| [docs/CADRAGE.md](docs/CADRAGE.md) | Document de cadrage : public, fil rouge, parcours, organisation | Fait |
+| [docs/MMI-R507-projet-blockchain-CHOIX-MODELISATION.md](docs/MMI-R507-projet-blockchain-CHOIX-MODELISATION.md) | Livrable officiel des choix de modélisation, une fiche par notion | Fait |
+| [docs/suivi/](docs/suivi/) | Fiches de suivi hebdomadaire, semaines 1 à 6 | Faites (rédigées le 20 novembre 2026) |
+| [docs/MMI-R507-projet-blockchain-GRILLE-AUTOEVAL.md](docs/MMI-R507-projet-blockchain-GRILLE-AUTOEVAL.md) | Auto-évaluation du binôme | Faite |
 | [docs/tests-utilisateurs/](docs/tests-utilisateurs/README.md) | Comptes rendus des tests utilisateurs | 1 test sur 2 |
-| `docs/MMI-R507-projet-blockchain-CHOIX-MODELISATION.md` | Livrable officiel des choix de modélisation | Modèle à déposer puis à compléter |
-| `docs/suivi/SEMAINE-01.md` à `SEMAINE-08.md` | Fiches de suivi hebdomadaire | Modèle à déposer, une fiche par semaine |
-| `docs/MMI-R507-projet-blockchain-GRILLE-AUTOEVAL.md` | Auto-évaluation, à déposer avant la soutenance | À faire en fin de projet |
 
 ## Calendrier
 
@@ -134,19 +142,32 @@ Ces jalons existent aussi sous forme de milestones GitHub.
 
 ## Organisation du travail
 
-- **Board GitHub Projects** : _lien à ajouter_. Colonnes : Backlog, À faire,
-  En cours, À vérifier, Terminé.
-- **Issues** : une issue par tâche précise, assignée à un membre et rattachée à
-  un milestone.
-- **Commits et pull requests** : ils citent l'issue concernée (`#12`), et une PR
-  qui termine une tâche la ferme avec `Closes #12`.
+- **Board GitHub Projects, issues et milestones** : ils n'ont pas été créés
+  pendant le projet. C'est la principale lacune de notre gestion de projet.
+- **Commits** : messages en français, préfixés par le type de changement.
+- **Branches** : `main` contient la version rendue ; `post-soutenance` contient
+  les corrections demandées après la soutenance.
 - **Suivi** : une fiche par semaine dans `docs/suivi/`.
 
 ## Démo en ligne
 
-_À venir_ : déploiement prévu sur GitHub Pages. L'application est à la racine du
-dépôt et ne demande aucune étape de construction : il suffira d'activer Pages sur
-la branche `main`. Avec un compte gratuit, cela suppose que le dépôt soit public.
+https://yoyolartichaud.github.io/R507---Dispositif-intercactif---blockchain/
+
+Publiée avec GitHub Pages depuis la branche `main`. L'application ne demande
+aucune étape de construction.
+
+## Corrections après la soutenance
+
+Faites sur la branche `post-soutenance`, à la demande de l'enseignant :
+
+- **Fiche d'un nœud** : un clic sur un ordinateur (nœud de la traçabilité, nœud
+  ou mineur Bitcoin) ouvre sa fiche : son rôle, ce qu'il vérifie, sa copie de la
+  blockchain bloc par bloc, s'il est d'accord avec les autres et, pour Bitcoin, les
+  transactions en attente dans sa mempool. Si sa copie a été modifiée, la fiche
+  l'indique.
+- **Paiement en satoshis** : tous les textes du paiement parlent en satoshis, la
+  plus petite unité du bitcoin (prix, frais, solde, récompense des mineurs).
+- **README** mis à jour.
 
 ## Usage de l'IA générative
 
@@ -158,5 +179,9 @@ membre relit le code généré pour pouvoir l'expliquer en soutenance.
 |---|---|---|
 | 12 octobre 2026 | Claude (Anthropic) | Structure du dépôt, première version du README et du document de cadrage, liste initiale des issues et des milestones |
 | 13 octobre 2026 | Claude (Anthropic) | Maquette comparant trois styles visuels ; prototype de blockchain manipulable ; code, décors 3D et textes de l'application ; corrections après le test utilisateur n°1 ; mise à jour du README et du cadrage ; mise en forme du compte rendu de test |
+| 14 octobre 2026 | Claude (Anthropic) | Lancement avec `npm start` |
+| 4 novembre 2026 | Claude (Anthropic) | Prototype du fork (plusieurs brasseries, camions et bars), non intégré : rendu jugé pas assez clair |
+| 18 novembre 2026 | Claude (Anthropic) | Fiche de préparation de la soutenance |
+| 20 novembre 2026 | Claude (Anthropic) | Rédaction du document de choix de modélisation, des fiches de suivi et de la grille d'auto-évaluation, relus et complétés par le binôme ; fiche d'un nœud et paiement en satoshis ; mise à jour du README |
 
 L'abus d'alcool est dangereux pour la santé, à consommer avec modération.

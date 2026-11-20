@@ -2,9 +2,9 @@
 
 Projet R507 — Visualisation pédagogique de la blockchain avec Three.js.
 
-> Première version, à relire et à valider par tout le groupe. Les choix de
-> représentation seront argumentés en détail dans le livrable officiel
-> `MMI-R507-projet-blockchain-CHOIX-MODELISATION.md`.
+> Document validé par le binôme. Les choix de représentation sont argumentés en
+> détail dans le livrable officiel
+> [MMI-R507-projet-blockchain-CHOIX-MODELISATION.md](MMI-R507-projet-blockchain-CHOIX-MODELISATION.md).
 
 ## 1. Objectif
 

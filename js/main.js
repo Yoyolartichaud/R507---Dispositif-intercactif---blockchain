@@ -1,5 +1,5 @@
 // Le chef d'orchestre : il crée la scène, raconte l'histoire étape par étape,
-// écrit les blocs, gère la vue éclatée et le paiement en bitcoin.
+// écrit les blocs, gère la vue éclatée et le paiement en satoshis.
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -173,7 +173,7 @@ const tamperedLedger = () => ledgers.find((ledger) => ledger.bad >= 0);
 // Décor
 // ---------------------------------------------------------------------------
 place(decor.makeShelf(-2.2, 17.2, SHELF_H, 1.9, 0xebe6da, 'BLOCKCHAIN DE TRAÇABILITÉ'), 0, FLOOR_Y, SHELF_Z);
-place(decor.makeShelf(25.7, 42.6, SHELF_H, 1.9, 0xf6e3c5, 'BLOCKCHAIN BITCOIN'), 0, FLOOR_Y, SHELF_Z);
+place(decor.makeShelf(25.7, 42.6, SHELF_H, 1.9, 0xf6e3c5, 'BLOCKCHAIN BITCOIN (EN SATOSHIS)'), 0, FLOOR_Y, SHELF_Z);
 
 const field = place(decor.makeField(), 0, FLOOR_Y, 2.9);
 const tractor = place(decor.makeTractor(), -2.1, FLOOR_Y + 0.12, 2.7);
@@ -205,6 +205,7 @@ trace.copies = STAGES.slice(0, 4).map((info, i) => {
   computer.group.scale.setScalar(0.001);       // ils apparaissent quand on présente le réseau
   return computer;
 });
+trace.copies.forEach((computer, i) => { computer.group.userData.node = { computer, ledger: trace, index: i }; });
 const traceNetwork = place(decor.makeNetwork(trace.copies.map((computer) => v(computer.group.position.x, 0.04, 5.85))), 0, FLOOR_Y, 0);
 traceNetwork.visible = false;
 
@@ -215,6 +216,7 @@ bitcoin.copies = ['Nœud Paris', '⛏ Mineur A', 'Nœud Tokyo', '⛏ Mineur B', 
   computer.group.scale.setScalar(NODE_SIZE);
   return computer;
 });
+bitcoin.copies.forEach((computer, i) => { computer.group.userData.node = { computer, ledger: bitcoin, index: i }; });
 const MINERS = bitcoin.copies.filter((computer) => computer.fans);
 place(decor.makeNetwork(bitcoin.copies.map((computer) => v(computer.group.position.x, 0.04, 6.65))), 0, FLOOR_Y, 0);
 const coin = place(decor.makeCoin(), 0, 0, 0);
@@ -575,7 +577,7 @@ async function introNetwork() {
     await flyOrb(scene, trace.copies[i].point, trace.copies[i + 1].point, { color: 0x6c8ea4, duration: 0.5, arc: 0.7 });
   }
   narrate('Où est rangée une blockchain ?',
-    "Ni dans un coffre, ni sur un serveur central. Chaque participant a un ordinateur, appelé <b>nœud</b> : ici la ferme, la brasserie, le transporteur et le bar. Ces 4 ordinateurs sont reliés par Internet : c'est le <b>réseau</b>. Chacun garde sur son disque dur <b>une copie complète</b> de la blockchain. Si l'un tombe en panne ou ment, les trois autres ont toujours la bonne version. L'étagère du fond montre en grand ce que contient chaque copie : pour l'instant, rien.");
+    "Ni dans un coffre, ni sur un serveur central. Chaque participant a un ordinateur, appelé <b>nœud</b> : ici la ferme, la brasserie, le transporteur et le bar. Ces 4 ordinateurs sont reliés par Internet : c'est le <b>réseau</b>. Chacun garde sur son disque dur <b>une copie complète</b> de la blockchain. Si l'un tombe en panne ou ment, les trois autres ont toujours la bonne version. L'étagère du fond montre en grand ce que contient chaque copie : pour l'instant, rien." + tip('Clique sur un ordinateur pour voir sa copie de la blockchain.'));
 }
 
 // La machine à empreintes : on tape un texte, on voit son empreinte changer.
@@ -684,7 +686,7 @@ async function sceneBar() {
 }
 
 // ---------------------------------------------------------------------------
-// Chapitre 2 : Léa paie sa bière en bitcoin
+// Chapitre 2 : Léa paie sa bière en satoshis
 // ---------------------------------------------------------------------------
 const pay = { wallet: null, barAddress: addressOf('le-bar-du-coin'), amount: PRICE, signature: '', check: 0 };
 
@@ -710,7 +712,7 @@ async function payOrder() {
   await scan(P.qr, 0.4);
   $('history').classList.add('read');
   narrate('29 août · Léa commande une bière',
-    `Léa scanne le QR code de la carte. Son téléphone ouvre un <b>explorateur de blocs</b> : une page qui affiche la blockchain sous forme de tableau, un bloc par ligne. Elle y lit les 4 blocs, coup de chaud compris. Lire ne crée pas de bloc et ne demande la permission de personne. Rassurée, elle commande, et veut payer en <b>bitcoin</b> : une monnaie numérique qui fonctionne sans banque.${tip('Clique sur « Lire la blockchain », en bas de la scène, pour voir ce que voit Léa.')}`);
+    `Léa scanne le QR code de la carte. Son téléphone ouvre un <b>explorateur de blocs</b> : une page qui affiche la blockchain sous forme de tableau, un bloc par ligne. Elle y lit les 4 blocs, coup de chaud compris. Lire ne crée pas de bloc et ne demande la permission de personne. Rassurée, elle commande, et veut payer en <b>satoshis</b> : le satoshi est la plus petite unité du bitcoin, une monnaie numérique qui fonctionne sans banque. Une bière ne coûte qu'une toute petite fraction de bitcoin, alors on compte en satoshis.${tip('Clique sur « Lire la blockchain », en bas de la scène, pour voir ce que voit Léa.')}`);
 }
 
 async function payWallet() {
@@ -813,7 +815,7 @@ async function payBroadcast() {
   mempoolCards.unshift(token);
   await frame(34.1, 8.3, 1.4);
   narrate('Vérifiée par le réseau, en salle d\'attente',
-    "La transaction a été envoyée à des milliers d'ordinateurs, les <b>nœuds</b>. Aucun chef, aucun serveur central : le réseau est <b>décentralisé</b>. Chaque nœud vérifie deux choses : la signature est-elle valide ? Léa possède-t-elle bien ces bitcoins, sans les avoir déjà dépensés ? La transaction attend maintenant dans la <b>mempool</b>, avec les paiements d'autres personnes.", 'ok');
+    "La transaction a été envoyée à des milliers d'ordinateurs, les <b>nœuds</b>. Aucun chef, aucun serveur central : le réseau est <b>décentralisé</b>. Chaque nœud vérifie deux choses : la signature est-elle valide ? Léa possède-t-elle bien ces satoshis, sans les avoir déjà dépensés ? La transaction attend maintenant dans la <b>mempool</b>, avec les paiements d'autres personnes." + tip("Clique sur un nœud ou sur un mineur pour voir ce qu'il garde."), 'ok');
 }
 
 /** Qui écrit le prochain bloc ? On présente les mineurs avant de lancer la course. */
@@ -824,7 +826,7 @@ async function minersIntro() {
     miner.setStatus('prêt à calculer', AMBER);
   }
   narrate('Qui écrit le prochain bloc ?',
-    "Dans une banque, c'est la banque qui inscrit les paiements. Ici, il n'y a pas de chef. Alors qui écrit la prochaine page ? Des volontaires, les <b>mineurs</b> : des personnes ou des entreprises équipées d'ordinateurs très puissants. Ils font la course : le premier qui résout une énigme de calcul gagne le droit d'écrire le bloc, et reçoit une <b>récompense</b> en bitcoins. C'est pour elle qu'ils travaillent.");
+    "Dans une banque, c'est la banque qui inscrit les paiements. Ici, il n'y a pas de chef. Alors qui écrit la prochaine page ? Des volontaires, les <b>mineurs</b> : des personnes ou des entreprises équipées d'ordinateurs très puissants. Ils font la course : le premier qui résout une énigme de calcul gagne le droit d'écrire le bloc, et reçoit une <b>récompense</b> en satoshis. C'est pour elle qu'ils travaillent.");
 }
 
 const AMBER = '#9a6700';
@@ -865,7 +867,7 @@ async function payMine() {
   confirmPill.visible = true;
   const name = winner.name.replace('⛏ ', '');
   narrate(`${name} a gagné, après ${number(tries)} essais`,
-    `Il reçoit les frais des transactions, plus des bitcoins tout neufs. Les autres nœuds vérifient son bloc en un seul calcul, puis l'ajoutent à leur copie. Pourquoi une énigme si difficile ? Parce qu'elle coûte du temps et de l'électricité : pour modifier un ancien bloc, un tricheur devrait refaire toutes les énigmes plus vite que tous les mineurs du monde réunis. C'est le travail des mineurs qui protège la blockchain. Le paiement de Léa, lui, a <b>1 confirmation</b>.${tip('Clique sur ce bloc : il contient trois transactions.')}`, 'ok');
+    `Il reçoit les frais des transactions, plus des satoshis tout neufs, créés avec le bloc. Les autres nœuds vérifient son bloc en un seul calcul, puis l'ajoutent à leur copie. Pourquoi une énigme si difficile ? Parce qu'elle coûte du temps et de l'électricité : pour modifier un ancien bloc, un tricheur devrait refaire toutes les énigmes plus vite que tous les mineurs du monde réunis. C'est le travail des mineurs qui protège la blockchain. Le paiement de Léa, lui, a <b>1 confirmation</b>.${tip('Clique sur ce bloc : il contient trois transactions.')}`, 'ok');
 }
 
 const NEXT_PAYMENTS = [
@@ -1208,7 +1210,7 @@ function hashChip(hash) {
   return chip;
 }
 
-function ledgerTable(ledger, title, where) {
+function ledgerTable(ledger, title, where, blocks = ledger.network) {
   const section = document.createElement('section');
   const heading = document.createElement('h3');
   heading.textContent = title;
@@ -1218,7 +1220,7 @@ function ledgerTable(ledger, title, where) {
   const table = document.createElement('table');
   table.innerHTML = '<thead><tr><th>Bloc</th><th>Données</th><th>Empreinte du parent</th><th>Nonce</th><th>Empreinte du bloc</th></tr></thead>';
   const body = document.createElement('tbody');
-  for (const block of ledger.network) {
+  for (const block of blocks) {
     const row = document.createElement('tr');
     const cell = (content) => {
       const td = document.createElement('td');
@@ -1236,6 +1238,61 @@ function ledgerTable(ledger, title, where) {
   table.append(body);
   section.append(heading, intro, table);
   return section;
+}
+
+/** Ce que fait chaque ordinateur, selon la blockchain à laquelle il appartient. */
+function nodeRole(computer, ledger) {
+  if (ledger === trace) {
+    return "Un <b>nœud</b> de la blockchain de traçabilité, qui est <b>privée</b> : seules la ferme, la brasserie, le transporteur et le bar y participent. Il garde une copie complète de la chaîne, fabrique le bloc de son étape, et vérifie les blocs écrits par les autres avant de les ranger.";
+  }
+  if (computer.fans) {
+    return "Un <b>mineur</b> : un nœud qui, en plus, fait la course pour écrire le prochain bloc. Il prend les transactions de sa mempool, cherche le nonce qui donne une empreinte commençant par « 00 », et touche une récompense en satoshis s'il trouve le premier.";
+  }
+  return "Un <b>nœud</b> du réseau Bitcoin, qui est <b>public</b> : n'importe qui peut en faire tourner un. Il garde une copie complète de la chaîne, vérifie chaque transaction reçue (signature valide, satoshis pas déjà dépensés) et chaque nouveau bloc, puis les transmet aux nœuds voisins.";
+}
+
+/** Fiche d'un ordinateur : son rôle, sa copie de la blockchain bloc par bloc, et s'il est d'accord avec les autres. */
+function openNode({ computer, ledger, index }) {
+  const name = computer.name.replace('⛏ ', '');
+  const isTrace = ledger === trace;
+  // Dans la traçabilité, l'auteur d'un bloc modifié garde sa version ; tous les autres ont celle du réseau.
+  const tampered = isTrace && ledger.bad >= 0 && ledger.bad === index;
+  const blocks = ledger.network.slice(0, computer.count).map((block, i) => (tampered && i === ledger.bad ? ledger.chain[i] : block));
+
+  $('node-title').textContent = isTrace ? `L'ordinateur : ${name}` : name;
+  const body = $('node-body');
+  body.replaceChildren();
+  const role = document.createElement('p');
+  role.innerHTML = nodeRole(computer, ledger);
+
+  const status = document.createElement('p');
+  status.className = `node-status ${tampered ? 'bad' : 'ok'}`;
+  status.textContent = tampered
+    ? `✖ Sa copie a été modifiée : le ${ledger.chain[ledger.bad].title.toLowerCase()} ne correspond plus à celui des autres. Ils refuseront cette version.`
+    : (computer.count ? '✔ Sa copie est identique à celle des autres nœuds.' : "Sa copie est encore vide : aucun bloc n'a été écrit.");
+
+  const facts = document.createElement('dl');
+  facts.className = 'node-facts';
+  const fact = (term, value) => {
+    const dt = document.createElement('dt');
+    dt.textContent = term;
+    const dd = document.createElement('dd');
+    dd.textContent = value;
+    facts.append(dt, dd);
+  };
+  fact('Blockchain', isTrace ? 'Traçabilité (privée)' : 'Bitcoin (publique)');
+  fact('Sa copie', `${computer.count} bloc${computer.count > 1 ? 's' : ''}`);
+  fact('Où elle est rangée', isTrace
+    ? 'Dans un fichier, sur le disque dur de cet ordinateur.'
+    : 'Dans un fichier sur son disque dur. Dans le vrai Bitcoin, la chaîne complète pèse plusieurs centaines de gigaoctets.');
+  if (!isTrace) fact('En attente dans sa mempool', `${mempoolCards.length} transaction${mempoolCards.length > 1 ? 's' : ''}`);
+
+  body.append(role, status, facts);
+  if (blocks.length) {
+    body.append(ledgerTable(ledger, isTrace ? 'Sa copie de la blockchain' : 'Sa copie (les derniers blocs)',
+      'Chaque nœud garde la même liste de blocs. Même couleur = même empreinte.', blocks));
+  }
+  $('node-info').showModal();
 }
 
 function openExplorer() {
@@ -1276,7 +1333,12 @@ function pick(event) {
   const hit = raycaster.intersectObjects(groups, true)[0];
   let object = hit?.object;
   while (object && !object.userData.pick) object = object.parent;
-  return object ? { block: object.userData.pick } : null;
+  if (object) return { block: object.userData.pick };
+  // Sinon, un ordinateur du réseau (seulement ceux qui sont déjà apparus).
+  const nodes = [...trace.copies, ...bitcoin.copies].map((computer) => computer.group).filter((group) => group.scale.x > 0.5);
+  let node = raycaster.intersectObjects(nodes, true)[0]?.object;
+  while (node && !node.userData.node) node = node.parent;
+  return node ? { node: node.userData.node } : null;
 }
 
 renderer.domElement.addEventListener('pointerdown', (event) => { pressed = [event.clientX, event.clientY]; });
@@ -1288,6 +1350,7 @@ renderer.domElement.addEventListener('pointerup', (event) => {
   const target = pick(event);
   if (target?.part) selectPart(target.part);
   else if (target?.block) openFocus(target.block);
+  else if (target?.node) openNode(target.node);
 });
 renderer.domElement.addEventListener('pointermove', (event) => {
   renderer.domElement.style.cursor = !busy && !ask && pick(event) ? 'pointer' : 'grab';
@@ -1325,6 +1388,7 @@ $('tx-amount').addEventListener('input', (event) => tamperTransaction(event.targ
 $('lab-text').addEventListener('input', updateLab);
 $('view-table').addEventListener('click', openExplorer);
 $('explorer-close').addEventListener('click', () => $('explorer').close());
+$('node-close').addEventListener('click', () => $('node-info').close());
 $('view-all').addEventListener('click', overview);
 $('view-reset').addEventListener('click', () => frame(lastFrame.x, lastFrame.half));
 window.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeFocus(); });
@@ -1339,7 +1403,7 @@ setStage(0);
 $('clock').textContent = 'Juillet 2026';
 renderHistory();
 narrate('Du champ au verre : suivons une bière',
-  "À chaque étape de sa fabrication, des informations sont écrites dans une <b>blockchain</b> : un registre numérique partagé entre la ferme, la brasserie, le transporteur et le bar. Personne ne peut le modifier dans son coin. À la fin, Léa paiera sa bière en bitcoin, et on verra comment ça marche. Mais d'abord : une blockchain, c'est rangé où ?");
+  "À chaque étape de sa fabrication, des informations sont écrites dans une <b>blockchain</b> : un registre numérique partagé entre la ferme, la brasserie, le transporteur et le bar. Personne ne peut le modifier dans son coin. À la fin, Léa paiera sa bière en satoshis, la monnaie du réseau Bitcoin, et on verra comment ça marche. Mais d'abord : une blockchain, c'est rangé où ?");
 play();
 
 let lastTime = performance.now();

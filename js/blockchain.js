@@ -31,7 +31,7 @@ export const copyChain = (chain) => chain.map((block) => ({ ...block }));
 export const number = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
 // Les étapes du voyage. Les quatre premières écrivent un bloc de traçabilité,
-// avec plusieurs enregistrements chacune. La dernière est le paiement en bitcoin.
+// avec plusieurs enregistrements chacune. La dernière est le paiement en satoshis.
 export const STAGES = [
   { icon: '🌾', name: 'Champ', actor: 'Ferme', date: '18 juil.',
     records: ['Orge récoltée : parcelle 7', 'Label bio vérifié', 'Poids : 2 000 kg'] },

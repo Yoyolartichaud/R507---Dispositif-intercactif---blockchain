@@ -89,7 +89,7 @@
       <dt>Décentralisé</dt><dd>Sans chef ni serveur central : les nœuds se mettent d'accord entre eux.</dd>
       <dt>Bitcoin, satoshi</dt><dd>Une monnaie numérique sans banque. Le satoshi est sa plus petite unité : 100 millions de satoshis font 1 bitcoin.</dd>
       <dt>Portefeuille (wallet)</dt><dd>L'application qui garde les clés. Il ne contient pas de pièces.</dd>
-      <dt>Clé privée</dt><dd>Le secret qui permet de dépenser ses bitcoins. On ne la donne jamais.</dd>
+      <dt>Clé privée</dt><dd>Le secret qui permet de dépenser ses satoshis. On ne la donne jamais.</dd>
       <dt>Clé publique, adresse</dt><dd>Calculées à partir de la clé privée, on peut les donner à tout le monde pour être payé. Ici, le format de l'adresse est simplifié.</dd>
       <dt>Transaction</dt><dd>Un ordre de paiement : telle adresse envoie tel montant à telle autre.</dd>
       <dt>Signature</dt><dd>La preuve, calculée avec la clé privée, que la transaction vient bien de son propriétaire.</dd>
@@ -127,6 +127,14 @@
   <p>Voici la forme réelle d'une blockchain : <strong>une longue liste de blocs, enregistrée dans un fichier sur chaque ordinateur du réseau</strong>. Pour la lire, on utilise un site ou une application appelé explorateur de blocs, qui l'affiche en tableau, un bloc par ligne.</p>
   <p class="hint">Même couleur = même empreinte. Regarde : l'« empreinte du parent » de chaque ligne est l'« empreinte du bloc » de la ligne du dessus. C'est ça, la chaîne.</p>
   <div id="explorer-body"></div>
+</dialog>
+
+<dialog id="node-info" aria-labelledby="node-title">
+  <header>
+    <h2 id="node-title">Nœud</h2>
+    <button id="node-close" type="button">Fermer</button>
+  </header>
+  <div id="node-body"></div>
 </dialog>
 
 <script type="module" src="js/main.js"></script>
